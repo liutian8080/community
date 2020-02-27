@@ -1,5 +1,6 @@
 package life.majiang.community.community.controller;
 
+import com.sun.net.httpserver.HttpServer;
 import life.majiang.community.community.dto.AccesstokenDTO;
 import life.majiang.community.community.dto.GithubUser;
 import life.majiang.community.community.provider.GithubProvider;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class AuthorizeController {
@@ -23,7 +26,8 @@ public class AuthorizeController {
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
-                           @RequestParam(name = "state") String state){
+                           @RequestParam(name = "state") String state,
+                           HttpServletRequest request){
         AccesstokenDTO accesstokenDTO = new AccesstokenDTO();
         accesstokenDTO.setClient_id(clientId);
         accesstokenDTO.setClient_secret(clientSecret);
@@ -32,7 +36,13 @@ public class AuthorizeController {
         accesstokenDTO.setState(state);
         String accesstoken = githubProvider.getAccesstoken(accesstokenDTO);
         GithubUser user = githubProvider.getUser(accesstoken);
-        System.out.println(user.getName());
-        return "index";
+        if(user != null){
+            //登录成功，写cookie和session
+            request.getSession().setAttribute("user",user);
+            return "redirect:/";
+        }else {
+            //登录失败，重新登录
+            return "redirect:/";
+        }
     }
 }
