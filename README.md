@@ -16,5 +16,18 @@
 
 [github OAuth文档](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/)
 
+[spring官方文档](https://docs.spring.io/spring-boot/docs/2.0.0RC1/reference/htmlsingle/#boot-features-embedded-database-support)
 ##工具
 [我的github](https://github.com/liutian8080/community)
+
+
+##脚本
+```sql
+CREATE TABLE USER 
+    ID INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    ACCOUNT_ID VARCHAR (100),
+    NAME VARCHAR (50),
+    TOKEN VARCHAR (36),
+    GMT_CREATE BIGINT,
+    GMT_MODIFIED BIGINT
+```
